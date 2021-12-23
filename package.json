@@ -20,5 +20,8 @@
   "homepage": "https://github.com/shiyou00/lion-x-cli#readme",
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "dependencies": {
+    "import-local": "^3.0.3"
   }
 }

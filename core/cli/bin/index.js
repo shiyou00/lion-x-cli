@@ -1,2 +1,9 @@
 #!/usr/bin/env node
-console.log("init lion-x cli")
+
+const importLocal = require("import-local");
+
+if (importLocal(__filename)) {
+    require("npmlog").info("cli", "using local version of lion-x");
+} else {
+    require("../lib")(process.argv.slice(2));
+}
