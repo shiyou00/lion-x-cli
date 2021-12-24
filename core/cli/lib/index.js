@@ -10,6 +10,7 @@ function core() {
     try{
         checkPkgVersion();
         checkNodeVersion();
+        checkRoot();
     }catch (e){
         log.error(e.message);
     }
@@ -25,6 +26,11 @@ function checkNodeVersion(){
     if(!semver.gte(currentVersion,lowestVersion)){
         throw new Error(colors.red(`lion-x 需要安装v${lowestVersion}以上版本的Node.js`))
     }
+}
+
+function checkRoot() {
+    const rootCheck = require('root-check');
+    rootCheck();
 }
 
 module.exports = core;
