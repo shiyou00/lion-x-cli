@@ -1,9 +1,9 @@
 {
-  "name": "@lion-x/cli",
+  "name": "@lion-x/log",
   "version": "1.0.1",
   "description": "> TODO: description",
-  "author": "8533334@qq.com",
-  "homepage": "https://github.com/shiyou00/lion-x-cli/tree/main/core/cli#readme",
+  "author": "frankshi <frankshi@easyops.cn>",
+  "homepage": "https://github.com/shiyou00/lion-x-cli/tree/main/utils/log#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {
@@ -23,17 +23,7 @@
   "bugs": {
     "url": "https://github.com/shiyou00/lion-x-cli/issues"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "bin": {
-    "lion-x": "bin/index.js"
-  },
   "dependencies": {
-    "@lion-x/log": "file:../../utils/log",
-    "colors": "^1.4.0",
-    "import-local": "^3.0.3",
-    "npmlog": "^6.0.0",
-    "semver": "^7.3.5"
+    "npmlog": "^6.0.0"
   }
 }
