@@ -1,4 +1,4 @@
-
 module.exports = {
-    LOWEST_NODE_VERSION: "12.0.0"
+    LOWEST_NODE_VERSION: "12.0.0",
+    DEFAULT_CLI_HOME: '.lion-x'
 }
