@@ -22,5 +22,8 @@
   },
   "bugs": {
     "url": "https://github.com/shiyou00/lion-x-cli/issues"
+  },
+  "dependencies": {
+    "@lion-x/log": "file:../../utils/log"
   }
 }
