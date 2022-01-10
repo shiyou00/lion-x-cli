@@ -32,6 +32,7 @@
   "dependencies": {
     "@lion-x/get-npm-info": "file:../../utils/get-npm-info",
     "@lion-x/log": "file:../../utils/log",
+    "@lion-x/exec": "file:../exec",
     "@lion-x/init": "file:../../commands/init",
     "colors": "^1.4.0",
     "commander": "^8.3.0",

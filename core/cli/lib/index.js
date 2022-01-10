@@ -11,7 +11,7 @@ const pkg = require("../package.json");
 const { LOWEST_NODE_VERSION, DEFAULT_CLI_HOME } = require("./consts");
 
 const log = require("@lion-x/log");
-const init = require("@lion-x/init");
+const exec = require("@lion-x/exec");
 
 const program = new commander.Command();
 
@@ -43,7 +43,7 @@ function registerCommand(){
     program
         .command('init [projectName]')
         .option('-f,--force','是否强制更新项目')
-        .action(init)
+        .action(exec)
 
     // 开启debug模式
     program.on('option:debug',function(){
@@ -57,7 +57,8 @@ function registerCommand(){
 
     // 指定targetPath
     program.on('option:targetPath', function() {
-        process.env.CLI_TARGET_PATH = program.targetPath;
+        const options = program.opts();
+        process.env.CLI_TARGET_PATH = options.targetPath;
     });
 
     // 对未知命令监听

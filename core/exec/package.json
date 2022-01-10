@@ -1,0 +1,34 @@
+{
+  "name": "@lion-x/exec",
+  "version": "1.0.1",
+  "description": "> TODO: description",
+  "author": "frankshi <8533334@qq.com>",
+  "homepage": "https://github.com/shiyou00/lion-x-cli/tree/main/core/exec#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shiyou00/lion-x-cli.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/shiyou00/lion-x-cli/issues"
+  },
+  "dependencies": {
+    "@lion-x/package": "file:../../models/package",
+    "@lion-x/log": "file:../../utils/log",
+    "@lion-x/utils": "file:../../utils/utils"
+  }
+}
