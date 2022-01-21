@@ -1,9 +1,9 @@
 {
-  "name": "@lion-x/init",
+  "name": "@lion-x/command",
   "version": "1.0.1",
   "description": "> TODO: description",
   "author": "frankshi <8533334@qq.com>",
-  "homepage": "https://github.com/shiyou00/lion-x-cli/tree/main/commands/init#readme",
+  "homepage": "https://github.com/shiyou00/lion-x-cli/tree/main/models/command#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {
@@ -13,6 +13,9 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shiyou00/lion-x-cli.git"
@@ -24,7 +27,8 @@
     "url": "https://github.com/shiyou00/lion-x-cli/issues"
   },
   "dependencies": {
-    "@lion-x/log": "file:../../utils/log",
-    "@lion-x/command": "file:../../models/command"
+    "colors": "^1.4.0",
+    "semver": "^7.3.5",
+    "@lion-x/log": "file:../../utils/log"
   }
 }
