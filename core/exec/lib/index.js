@@ -53,7 +53,31 @@ async function exec(...args) {
     }
     const rootFile = pkg.getRootFilePath();
     if (rootFile) {
-        require(rootFile).call(null, Array.from(arguments));
+        // require(rootFile).call(null, Array.from(arguments));
+        const args = Array.from(arguments);
+        const cmd = args[args.length - 1];
+        const o = Object.create(null);
+        Object.keys(cmd).forEach(key => {
+            if (cmd.hasOwnProperty(key) &&
+                !key.startsWith('_') &&
+                key !== 'parent') {
+                o[key] = cmd[key];
+            }
+        });
+        args[args.length - 1] = o;
+        const code = `require('${rootFile}').call(null, ${JSON.stringify(args)})`;
+        const child = spawn('node', ['-e', code], {
+            cwd: process.cwd(),
+            stdio: 'inherit',
+        });
+        child.on('error', e => {
+            log.error(e.message);
+            process.exit(1);
+        });
+        child.on('exit', e => {
+            log.verbose('命令执行成功:' + e);
+            process.exit(e);
+        });
     }
 }
 
