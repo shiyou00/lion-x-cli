@@ -1,8 +1,9 @@
 'use strict';
 
+const path = require("path");
 const Package = require("@lion-x/package");
 const log = require('@lion-x/log');
-const path = require("path");
+const { exec: spawn } = require('@lion-x/utils');
 
 const SETTINGS = {
     init: '@imooc-cli/init',
