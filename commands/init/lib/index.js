@@ -2,6 +2,8 @@
 const log = require("@lion-x/log");
 const Command = require("@lion-x/command");
 const fs = require("fs");
+const inquirer = require("inquirer");
+const fse = require('fs-extra');
 
 class initCommand extends Command{
     init(){
@@ -10,18 +12,44 @@ class initCommand extends Command{
         log.verbose('projectName', this.projectName);
         log.verbose('force', this.force);
     }
-    exec() {
+    async exec() {
         try {
-            this.prepare();
+            await this.prepare();
         }catch (e) {
             log.error(e.message);
         }
     }
-    prepare(){
+    async prepare(){
         const localPath = process.cwd();
         if(!this.isDirEmpty(localPath)){
             // 文件不为空时进入，判断是否强制更新逻辑
-            console.log(localPath,"不为空");
+            let ifContinue = false;
+            if (!this.force) {
+                // 询问是否继续创建
+                ifContinue = (await inquirer.prompt({
+                    type: 'confirm',
+                    name: 'ifContinue',
+                    default: false,
+                    message: '当前文件夹不为空，是否继续创建项目？',
+                })).ifContinue;
+                if (!ifContinue) {
+                    return;
+                }
+            }
+            // 2. 是否启动强制更新
+            if (ifContinue || this.force) {
+                // 给用户做二次确认
+                const { confirmDelete } = await inquirer.prompt({
+                    type: 'confirm',
+                    name: 'confirmDelete',
+                    default: false,
+                    message: '是否确认清空当前目录下的文件？',
+                });
+                if (confirmDelete) {
+                    // 清空当前目录
+                    fse.emptyDirSync(localPath);
+                }
+            }
         }
     }
     isDirEmpty(localPath){

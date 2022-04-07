@@ -24,7 +24,8 @@
     "url": "https://github.com/shiyou00/lion-x-cli/issues"
   },
   "dependencies": {
+    "@lion-x/command": "file:../../models/command",
     "@lion-x/log": "file:../../utils/log",
-    "@lion-x/command": "file:../../models/command"
+    "inquirer": "^8.2.2"
   }
 }
