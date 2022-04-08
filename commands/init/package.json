@@ -26,6 +26,11 @@
   "dependencies": {
     "@lion-x/command": "file:../../models/command",
     "@lion-x/log": "file:../../utils/log",
-    "inquirer": "^8.2.2"
+    "@lion-x/package": "file:../../models/package",
+    "@lion-x/utils": "file:../../utils/utils",
+    "inquirer": "^8.2.2",
+    "kebab-case": "^1.0.0",
+    "semver": "^7.3.4",
+    "user-home": "^2.0.0"
   }
 }
