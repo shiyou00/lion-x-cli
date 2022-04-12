@@ -7,11 +7,13 @@ const inquirer = require("inquirer");
 const fse = require('fs-extra');
 const semver = require('semver');
 const userHome = require('user-home');
+const glob = require('glob');
+const ejs = require('ejs');
 // lerna 包
 const log = require("@lion-x/log");
 const Command = require("@lion-x/command");
 const Package = require('@lion-x/package');
-const { spinnerStart, sleep } = require('@lion-x/utils');
+const { spinnerStart, sleep, execAsync } = require('@lion-x/utils');
 // 相对路径包
 const getProjectTemplate = require('./getProjectTemplate');
 // 常量
@@ -38,10 +40,123 @@ class initCommand extends Command{
                 this.projectInfo = projectInfo;
                 await this.downloadTemplate();
             }
+            // 安装模板
+            await this.installTemplate();
         }catch (e) {
             log.error(e.message);
+            if (process.env.LOG_LEVEL === 'verbose') {
+                console.log(e);
+            }
         }
     }
+
+    async installTemplate(){
+        log.verbose('templateInfo', this.templateInfo);
+        if (this.templateInfo) {
+            if (!this.templateInfo.type) {
+                this.templateInfo.type = TEMPLATE_TYPE_NORMAL;
+            }
+            if (this.templateInfo.type === TEMPLATE_TYPE_NORMAL) {
+                // 标准安装
+                await this.installNormalTemplate();
+            } else if (this.templateInfo.type === TEMPLATE_TYPE_CUSTOM) {
+                // 自定义安装
+                await this.installCustomTemplate();
+            } else {
+                throw new Error('无法识别项目模板类型！');
+            }
+        } else {
+            throw new Error('项目模板信息不存在！');
+        }
+    }
+
+    async installNormalTemplate() {
+        // 拷贝模板代码至当前目录
+        let spinner = spinnerStart('正在安装模板...');
+        await sleep();
+        const targetPath = process.cwd();
+        try {
+            const templatePath = path.resolve(this.templateNpm.cacheFilePath, 'template');
+            fse.ensureDirSync(templatePath);
+            fse.ensureDirSync(targetPath);
+            fse.copySync(templatePath, targetPath);
+        } catch (e) {
+            throw e;
+        } finally {
+            spinner.stop(true);
+            log.success('模板安装成功');
+        }
+        const templateIgnore = this.templateInfo.ignore || [];
+        const ignore = ['**/node_modules/**', ...templateIgnore];
+        await this.ejsRender({ ignore });
+        // 依赖安装
+        const { installCommand, startCommand } = this.templateInfo;
+        await this.execCommand(installCommand, '依赖安装失败！');
+        await this.execCommand(startCommand, '启动执行命令失败！');
+    }
+
+    async ejsRender(options) {
+        const dir = process.cwd();
+        const projectInfo = this.projectInfo;
+        return new Promise((resolve, reject) => {
+            glob('**', {
+                cwd: dir,
+                ignore: options.ignore || '',
+                nodir: true,
+            }, function(err, files) {
+                if (err) {
+                    reject(err);
+                }
+                Promise.all(files.map(file => {
+                    const filePath = path.join(dir, file);
+                    return new Promise((resolve1, reject1) => {
+                        ejs.renderFile(filePath, projectInfo, {}, (err, result) => {
+                            if (err) {
+                                reject1(err);
+                            } else {
+                                fse.writeFileSync(filePath, result);
+                                resolve1(result);
+                            }
+                        });
+                    });
+                })).then(() => {
+                    resolve();
+                }).catch(err => {
+                    reject(err);
+                });
+            });
+        });
+    }
+
+    async execCommand(command, errMsg){
+        let ret;
+        if (command) {
+            const cmdArray = command.split(' ');
+            const cmd = this.checkCommand(cmdArray[0]);
+            if (!cmd) {
+                throw new Error('命令不存在！命令：' + command);
+            }
+            const args = cmdArray.slice(1);
+            ret = await execAsync(cmd, args, {
+                stdio: 'inherit',
+                cwd: process.cwd(),
+            });
+        }
+        if (ret !== 0) {
+            throw new Error(errMsg);
+        }
+        return ret;
+    }
+
+    checkCommand(cmd) {
+        if (WHITE_COMMAND.includes(cmd)) {
+            return cmd;
+        }
+        return null;
+    }
+
+    async installCustomTemplate() {}
+
     async downloadTemplate() {
         const { projectTemplate } = this.projectInfo;
         const templateInfo = this.template.find(item => item.npmName === projectTemplate);

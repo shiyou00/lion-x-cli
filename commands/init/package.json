@@ -31,6 +31,9 @@
     "inquirer": "^8.2.2",
     "kebab-case": "^1.0.0",
     "semver": "^7.3.4",
-    "user-home": "^2.0.0"
+    "user-home": "^2.0.0",
+    "ejs": "^3.1.5",
+    "fs-extra": "^9.0.1",
+    "glob": "^7.1.6"
   }
 }
