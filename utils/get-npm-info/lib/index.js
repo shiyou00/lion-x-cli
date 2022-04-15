@@ -52,6 +52,9 @@ async function getNpmLatestVersion(npmName, registry) {
     let versions = await getNpmVersions(npmName, registry);
     let lastVersion;
     if (versions) {
+        if(versions.length === 1){
+            return versions[0];
+        }
         versions.forEach((item,index) => {
             if(versions[index+1]){
                 lastVersion = semver.gt(versions[index+1], versions[index]) ? versions[index+1] : versions[index]
